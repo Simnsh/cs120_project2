@@ -53,6 +53,7 @@ button {
 
 #guess {
   width: 150px;
+  font-size: 17px;
 }
 
 #submit-guess {
