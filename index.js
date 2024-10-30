@@ -33,7 +33,7 @@ function createBoard() {
     });
   });
 }
-
+console.log("The answer is", gameState.correctWord);
 createBoard();
 
 document.getElementById("submit-guess").addEventListener("click", function () {
@@ -113,4 +113,5 @@ document.getElementById("new-game").addEventListener("click", function () {
   document.getElementById("guess").value = "";
   document.getElementById("submit-guess").disabled = false;
   document.getElementById("new-game").style.display = "none";
+  console.log("The answer is", gameState.correctWord);
 });
