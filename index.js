@@ -1,16 +1,7 @@
-const words = [
-  "apple",
-  "mummy",
-  "silly",
-  "happy",
-  "shape",
-  "mimes",
-  "pride",
-  "flame",
-  "table",
-  "grape",
-  "pizza",
-  "fuzed",
+const words = ["apple","mummy","silly","happy","shape","mimes","pride","flame",
+  "table","grape","pizza","fuzed","laser","trend","cable","blink","water",
+  "crisp","brave","tease","flock","climb","train","spike","smile","crowd",
+  "grind","blaze","frost","light",
 ];
 
 // choose random word from the list.
@@ -22,6 +13,7 @@ const gameState = {
 function createBoard() {
   const board = document.getElementById("game-board");
 
+  //create 6 x 5 board
   const rows = Array.from({ length: 6 });
   rows.forEach((_, i) => {
     const cols = Array.from({ length: 5 });
@@ -36,20 +28,33 @@ function createBoard() {
 console.log("The answer is", gameState.correctWord);
 createBoard();
 
-document.getElementById("submit-guess").addEventListener("click", function () {
-  const userGuess = document.getElementById("guess").value.toLowerCase();
+document
+  .getElementById("submit-guess")
+  .addEventListener("click", async function () {
+    const userGuess = document.getElementById("guess").value.toLowerCase();
 
-  if (userGuess.length != 5) {
-    alert("Please enter a 5 letter word.");
-    return;
-  }
+    if (userGuess.length != 5) {
+      alert("Please enter a 5 letters word.");
+      const inputField = document.getElementById("guess");
+      inputField.focus();
+      inputField.select();
+      return;
+    }
 
-  checkGuess(userGuess);
+    // only call checkGuess if user's input word exists
+    const checkIfValid = await checkWordExisting(userGuess);
 
-  const inputField = document.getElementById("guess");
-  inputField.focus();
-  inputField.select();
-});
+    if (checkIfValid) {
+      checkGuess(userGuess);
+      updateUsedLetters(userGuess, gameState.correctWord);
+    } else {
+      alert("No such word!");
+    }
+
+    const inputField = document.getElementById("guess");
+    inputField.focus();
+    inputField.select();
+  });
 
 function checkGuess(guess) {
   if (gameState.numAttempt >= 6) {
@@ -100,6 +105,27 @@ function checkGuess(guess) {
   }
 }
 
+// check if function exist
+async function checkWordExisting(word) {
+  try {
+    const res = await fetch(`https://api.datamuse.com/words?sp=${word}&max=1`);
+    if (!res.ok) throw new Error(`Problem with api ${res.status}`);
+
+    const data = await res.json();
+
+    // check if it is valid word
+    if (data[0] == undefined) {
+      return false;
+    } else if (data[0].word == word) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
 const endGame = () => {
   document.getElementById("submit-guess").disabled = true;
   document.getElementById("new-game").style.display = "block";
@@ -114,4 +140,44 @@ document.getElementById("new-game").addEventListener("click", function () {
   document.getElementById("submit-guess").disabled = false;
   document.getElementById("new-game").style.display = "none";
   console.log("The answer is", gameState.correctWord);
+  resetUsedLetters();
 });
+
+const alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
+  "q","r","s","t","u","v","w","x","y","z"];
+
+function displayUsedLetter() {
+  const letterGrid = document.getElementById("display-used-letter");
+  alphabet.forEach(letter => {
+    const letterDiv = document.createElement("div");
+    letterDiv.classList.add("letter");
+    letterDiv.setAttribute("id", `letter-${letter}`);
+    letterDiv.textContent = letter.toUpperCase();
+    letterGrid.appendChild(letterDiv);
+  });
+}
+
+displayUsedLetter();
+
+function updateUsedLetters(guess, correctWord) {
+  guess.split('').forEach((letter, index) => {
+    const letterDiv = document.getElementById(`letter-${letter}`);
+
+      if (correctWord[index] === letter) {
+        letterDiv.classList.remove("wrong-position", "incorrect");
+        letterDiv.classList.add("correct");
+      } else if(correctWord.includes(letter) && !letterDiv.classList.contains("correct")){
+        letterDiv.classList.remove("incorrect");
+        letterDiv.classList.add("wrong-position");
+      } else if (!correctWord.includes(letter)){
+      letterDiv.classList.add("incorrect");
+      }
+  })
+}
+
+function resetUsedLetters(){
+  alphabet.forEach(letter => {
+    const letterDiv = document.getElementById(`letter-${letter}`);
+    letterDiv.classList.remove("correct", "wrong-position", "incorrect");
+  })
+}

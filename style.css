@@ -15,7 +15,7 @@ body {
 .cell {
   width: 70px;
   height: 70px;
-  border: 1px solid #000;
+  border: 1px solid black;
   font-size: 32px;
   display: flex;
   align-items: center;
@@ -74,4 +74,100 @@ button {
 .incorrect {
   background-color: grey;
   color: white;
+}
+
+/* Used letters */
+#used-letters {
+  margin-top: 30px;
+}
+
+#display-used-letter {
+  display: grid;
+  grid-template-columns: repeat(13, 30px);
+  grid-gap: 5px;
+}
+
+.letter {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  text-transform: uppercase;
+  font-size: 20px;
+  color: black;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+}
+
+.wrong-position {
+  background-color: yellow;
+  color: black;
+}
+
+.incorrect {
+  background-color: grey;
+  color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  #game-board {
+    grid-template-columns: repeat(5, 45px);
+    width: 250px;
+  }
+
+  .cell {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+  }
+
+  #display-used-letter {
+    grid-template-columns: repeat(6, 30px);
+    grid-gap: 4px;
+  }
+
+  .letter {
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+
+  #guess {
+    width: 120px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 14px;
+    height: 30px;
+  }
+
+  #guess-section {
+    align-items: center;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+    text-align: center;
+    margin: 0px;
+  }
+
+  h3 {
+    margin-top: 0px;
+  }
 }
