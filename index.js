@@ -175,7 +175,8 @@ function updateUsedLetters(guess, correctWord) {
   })
 }
 
-function resetUsedLetters(){
+// reset used letter boards
+const resetUsedLetters = () => {
   alphabet.forEach(letter => {
     const letterDiv = document.getElementById(`letter-${letter}`);
     letterDiv.classList.remove("correct", "wrong-position", "incorrect");
